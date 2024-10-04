@@ -33,9 +33,4 @@ app.get('/', (req, res) => {
 app.use('/api/players', playerRoutes);
 app.use('/api/game', matchRoutes);
 
-// Start server
-app.listen(() => {
-  console.log('Server is running');
-});
-
 module.exports = app;
