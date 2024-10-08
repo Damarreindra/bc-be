@@ -7,9 +7,13 @@ const matchRoutes = require('./Routes/matchRoute');
 
 const app = express();
 const mongoUri = process.env.MONGODB_URI;
+const PORT = process.env.PORT || 3000; // Use environment variable or default to 5000
 
 // Connect to MongoDB
-mongoose.connect(mongoUri)
+mongoose.connect(mongoUri, {
+  useNewUrlParser: true, 
+  useUnifiedTopology: true
+})
   .then(() => console.log('Connected to MongoDB Atlas!'))
   .catch((err) => console.error('MongoDB connection error:', err));
 
@@ -32,5 +36,10 @@ app.get('/', (req, res) => {
 
 app.use('/api/players', playerRoutes);
 app.use('/api/game', matchRoutes);
+
+// Listen on specified port
+app.listen(PORT, () => {
+  console.log(`Server is running on port http://127.0.0.1:${PORT}`);
+});
 
 module.exports = app;
