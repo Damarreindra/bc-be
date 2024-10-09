@@ -7,7 +7,7 @@ const matchRoutes = require('./Routes/matchRoute');
 
 const app = express();
 const mongoUri = process.env.MONGODB_URI;
-const PORT = process.env.PORT
+const PORT = 3000
 
 // Connect to MongoDB
 mongoose.connect(mongoUri, {
@@ -39,7 +39,7 @@ app.use('/api/game', matchRoutes);
 
 // Listen on specified port
 app.listen(PORT, () => {
-  console.log(`Server is running on port http://127.0.0.1:${PORT}`);
+  console.log(`Server is running on port ${PORT}`);
 });
 
 module.exports = app;
