@@ -22,7 +22,7 @@ exports.createMatch = async (req, res) => {
 
     const match = new Match({
       players: playersWithScores,
-      date: Date.now()
+      date: Date.now(),
     });
     await match.save();
 
@@ -35,7 +35,7 @@ exports.createMatch = async (req, res) => {
 exports.getAllMatches = async (req, res) => {
   try {
     const matches = await Match.find()
-    .populate('winner')
+      .populate("winner")
       .populate("players.player");
     if (!matches) {
       res.status(505).json({ message: "Match cant be found" });
@@ -49,8 +49,7 @@ exports.getAllMatches = async (req, res) => {
 exports.getMatchById = async (req, res) => {
   try {
     const { id } = req.params;
-    const match = await Match.findById(id)
-      .populate("players.player");
+    const match = await Match.findById(id).populate("players.player");
     if (!match) {
       res.status(505).json({ messsage: "Match cant be found" });
     }
@@ -103,20 +102,45 @@ exports.getWinner = async (req, res) => {
     }
 
     const updatedPlayer = await Player.findByIdAndUpdate(
-        playerId,
-        { $inc: { wins: 1 } },
+      playerId,
+      { $inc: { wins: 1 } },
+      { new: true }
+    );
+
+    if (!updatedPlayer) {
+      return res.status(404).json({ message: "Player not found" });
+    }
+
+    res.status(200).json({
+      message: "Player score updated successfully",
+      match: updatedMatch,
+      player: updatedPlayer,
+    });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
+exports.deleteMatch = async (req, res) => {
+  try {
+    const { winnerId, matchId } = req.body;
+    if (!matchId) {
+      return res.status(400).json({ message: "Match Id are required" });
+    }
+    const deletedMatch = await Match.findByIdAndDelete(matchId);
+    if (!deletedMatch) {
+      return res.status(404).json({ message: "Match or Player not found" });
+    }
+    if (winnerId !== null) {
+      const removeWin = await Player.findByIdAndUpdate(
+        winnerId,
+        { $inc: { wins: -1 } },
         { new: true }
       );
-  
-      if (!updatedPlayer) {
-        return res.status(404).json({ message: "Player not found" });
-      }
-  
-      res.status(200).json({
-        message: "Player score updated successfully",
-        match: updatedMatch,
-        player: updatedPlayer
-      });
+    }
+    res.status(200).json({
+      message: "Match deleted",
+    });
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
