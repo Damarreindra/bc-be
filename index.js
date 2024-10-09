@@ -7,7 +7,7 @@ const matchRoutes = require('./Routes/matchRoute');
 
 const app = express();
 const mongoUri = process.env.MONGODB_URI;
-const PORT = process.env.PORT || 3000; // Use environment variable or default to 5000
+const PORT = process.env.PORT
 
 // Connect to MongoDB
 mongoose.connect(mongoUri, {
