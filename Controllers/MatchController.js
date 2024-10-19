@@ -4,7 +4,7 @@ const Player = require("../Models/Player");
 
 exports.createMatch = async (req, res) => {
   try {
-    const { playerIds } = req.body;
+    const { playerIds, venue } = req.body;
 
     if (!playerIds || playerIds.length === 0) {
       return res
@@ -17,12 +17,11 @@ exports.createMatch = async (req, res) => {
       score: 0,
     }));
 
-    // const game = new Game({ date: Date.now() });
-    // await game.save();
 
     const match = new Match({
       players: playersWithScores,
       date: Date.now(),
+      venue: venue
     });
     await match.save();
 

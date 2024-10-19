@@ -7,6 +7,7 @@ const matchSchema = new mongoose.Schema({
 }],
 date: { type: Date, default: Date.now },
 winner: { type: mongoose.Schema.Types.ObjectId, ref: 'Player' },
+venue: {type: String, required:true}
 });
 
 module.exports = mongoose.model('Match', matchSchema);
