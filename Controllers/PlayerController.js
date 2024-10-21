@@ -2,6 +2,14 @@ const Player = require('../Models/Player')
 
 exports.createPlayer = async(req, res) =>{
     try {
+      const {username, photoUrl} = req.body
+      
+    if (!username || !photoUrl) {
+      return res
+        .status(400)
+        .json({ message: "Username and Photo is Required" });
+    }
+
         const player = new Player(req.body);
         await player.save();
         res.status(201).send({
