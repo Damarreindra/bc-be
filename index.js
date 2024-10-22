@@ -5,12 +5,13 @@ const https = require('https');
 require('dotenv').config();
 const playerRoutes = require('./Routes/playerRoute');
 const matchRoutes = require('./Routes/matchRoute');
+const authRoutes = require('./Routes/authRoute')
 const fs = require('fs');
 
 const app = express();
 const mongoUri = process.env.MONGODB_URI;
 const PORT = 443;
-
+// const PORT = 3000
 mongoose.connect(mongoUri)
   .then(() => console.log('Connected to MongoDB Atlas!'))
   .catch((err) => console.error('MongoDB connection error:', err));
@@ -32,16 +33,21 @@ app.get('/', (req, res) => {
 
 app.use('/api/players', playerRoutes);
 app.use('/api/game', matchRoutes);
+app.use('/api/auth', authRoutes);
 
 app.use((req, res, next) => {
   res.status(404).send('Not Found');
 });
+
+// app.listen(PORT, '0.0.0.0', () => {
+//   console.log(`Server is running on http://localhost:${PORT}`);
+// });
 
 const options = {
   key: fs.readFileSync('/etc/nginx/ssl/nginx-selfsigned.key'),
   cert: fs.readFileSync('/etc/nginx/ssl/nginx-selfsigned.crt'),
 };
 
-https.createServer(options, app).listen(PORT, '0.0.0.0', () => {
+https.createServer( app).listen(PORT, '0.0.0.0', () => {
   console.log(`Server is running on https://0.0.0.0:${PORT}`);
 });
