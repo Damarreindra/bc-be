@@ -136,9 +136,7 @@ exports.deleteMatch = async (req, res) => {
         { $inc: { wins: -1 } },
         { new: true }
       );
-      if(!removeWin){
-        return res.status(404).json({ message: "Match or Player not found" });
-      }
+     
     }
     res.status(200).json({
       message: "Match deleted",
